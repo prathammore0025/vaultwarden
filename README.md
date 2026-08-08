@@ -23,7 +23,7 @@ This document describes the complete deployment, configuration, administration, 
 | SMTP Server             | `smtp.office365.com`        |
 | SMTP Port               | `587`                       |
 | SMTP Security           | STARTTLS                    |
-| Organization            | DDecor                      |
+| Organization            | Lannister                      |
 
 ### Architecture
 
@@ -859,7 +859,7 @@ Account recovery requires the relevant organization policy/enrollment to be conf
 ### Recommended recovery structure
 
 ```text
-DDecor
+Lannister
  |
  +-- Owner 1
  |
@@ -1007,21 +1007,21 @@ For enterprise use, create an organization.
 Example:
 
 ```text
-DDecor
+Lannister
 ```
 
 Recommended structure:
 
 ```text
-DDecor
+Lannister
 |
-+-- DDecor-Production
++-- Lannister-Production
 |
-+-- DDecor-UAT
++-- Lannister-UAT
 |
-+-- DDecor-Development
++-- Lannister-Development
 |
-+-- DDecor-Shared-Tools
++-- Lannister-Shared-Tools
 ```
 
 ---
@@ -1033,7 +1033,7 @@ Collections are used to organize shared credentials and control access.
 Example:
 
 ```text
-DDecor-Production
+Lannister-Production
     |
     +-- AWS Production
     +-- MongoDB Production
@@ -1047,7 +1047,7 @@ DDecor-Production
 UAT:
 
 ```text
-DDecor-UAT
+Lannister-UAT
     |
     +-- AWS UAT
     +-- MongoDB UAT
@@ -1058,7 +1058,7 @@ DDecor-UAT
 Development:
 
 ```text
-DDecor-Development
+Lannister-Development
     |
     +-- AWS Development
     +-- MongoDB Development
@@ -1069,7 +1069,7 @@ DDecor-Development
 Shared tools:
 
 ```text
-DDecor-Shared-Tools
+Lannister-Shared-Tools
     |
     +-- GitHub
     +-- Jenkins
@@ -1092,10 +1092,10 @@ inside someone's personal vault, store it in:
 
 ```text
 Organization:
-DDecor
+Lannister
 
 Collection:
-DDecor-Production
+Lannister-Production
 ```
 
 Example:
@@ -1125,7 +1125,7 @@ Go to:
 ```text
 Organizations
     >
-DDecor
+Lannister
     >
 People
 ```
@@ -1160,7 +1160,7 @@ User Email
 User accepts invitation
   |
   v
-User joins DDecor
+User joins Lannister
 ```
 
 ---
@@ -1178,7 +1178,7 @@ Personal Vault
 and can also belong to:
 
 ```text
-DDecor Organization
+Lannister Organization
 ```
 
 Example:
@@ -1189,7 +1189,7 @@ Amit
 +-- Personal Vault
 |     +-- Personal credentials
 |
-+-- DDecor Organization
++-- Lannister Organization
       +-- Shared company credentials
 ```
 
@@ -1221,7 +1221,7 @@ Do not give every employee Owner/Admin permissions.
 
 ---
 
-# 35. DDecor Permission Model
+# 35. Lannister Permission Model
 
 Example:
 
@@ -1241,7 +1241,7 @@ The exact permission options available in the client/UI should be verified again
 # 36. Recommended Enterprise Organization
 
 ```text
-DDecor
+Lannister
 |
 +-- Owners
 |     +-- Primary Owner
@@ -1316,16 +1316,16 @@ Do not create one giant collection containing everything.
 Bad:
 
 ```text
-DDecor-All-Credentials
+Lannister-All-Credentials
 ```
 
 Better:
 
 ```text
-DDecor-Production
-DDecor-UAT
-DDecor-Development
-DDecor-Shared-Tools
+Lannister-Production
+Lannister-UAT
+Lannister-Development
+Lannister-Shared-Tools
 ```
 
 This makes access control easier.
@@ -1391,7 +1391,7 @@ When an employee leaves:
 
 ```text
 1. Disable corporate email/account
-2. Remove user from DDecor organization
+2. Remove user from Lannister organization
 3. Remove collection access
 4. Revoke organization membership
 5. Rotate credentials they knew
@@ -1871,7 +1871,7 @@ The normal process is:
 Admin
   |
   v
-DDecor
+Lannister
   |
   v
 People
@@ -1892,7 +1892,7 @@ User accepts
 User creates/logs into account
   |
   v
-User joins DDecor
+User joins Lannister
   |
   v
 Collection access assigned
@@ -1946,26 +1946,26 @@ Company credentials should normally be stored in the appropriate organization co
 
 ---
 
-# 58. Access DDecor Credentials
+# 58. Access Lannister Credentials
 
-After joining DDecor, the user will see the organization and collections they have permission to access.
+After joining Lannister, the user will see the organization and collections they have permission to access.
 
 Example:
 
 ```text
 My Vault
 
-DDecor
+Lannister
  |
- +-- DDecor-Development
+ +-- Lannister-Development
  |
- +-- DDecor-UAT
+ +-- Lannister-UAT
 ```
 
 If the user does not have access to:
 
 ```text
-DDecor-Production
+Lannister-Production
 ```
 
 they should not see/access the production credentials in that collection.
@@ -1977,9 +1977,9 @@ they should not see/access the production credentials in that collection.
 Example:
 
 ```text
-DDecor
+Lannister
   |
-  +-- DDecor-UAT
+  +-- Lannister-UAT
        |
        +-- AWS UAT
 ```
@@ -2002,7 +2002,7 @@ Recommended process:
 
 ```text
 1. Login
-2. Open DDecor organization
+2. Open Lannister organization
 3. Select appropriate collection
 4. Create new item
 5. Enter credential
@@ -2020,7 +2020,7 @@ Development
 
 ---
 
-# 61. Example: DDecor AWS Credentials
+# 61. Example: Lannister AWS Credentials
 
 Do not create:
 
@@ -2047,13 +2047,13 @@ Store each in the correct collection.
 Collection:
 
 ```text
-DDecor-Production
+Lannister-Production
 ```
 
 Item:
 
 ```text
-DDecor Production SSH
+Lannister Production SSH
 ```
 
 Fields:
@@ -2073,7 +2073,7 @@ Sensitive private keys should also be protected carefully and access should be l
 # 63. Example Permission Model
 
 ```text
-DDecor
+Lannister
 |
 +-- Production
 |     |
@@ -2147,7 +2147,7 @@ Rotate credentials after sensitive employee offboarding.
 # 65. Recommended Production Access Model
 
 ```text
-                   DDecor
+                   Lannister
                      |
           +----------+----------+
           |                     |
@@ -2174,7 +2174,7 @@ Rotate credentials after sensitive employee offboarding.
 Do not depend on one person.
 
 ```text
-DDecor
+Lannister
  |
  +-- Owner 1
  |
@@ -2378,12 +2378,12 @@ Before using real company credentials:
 
 ---
 
-# 73. Final Recommended DDecor Structure
+# 73. Final Recommended Lannister Structure
 
 ```text
 Vaultwarden
 │
-└── DDecor Organization
+└── Lannister Organization
     │
     ├── Owners
     │   ├── Primary Owner
@@ -2397,7 +2397,7 @@ Vaultwarden
     │
     └── Collections
         │
-        ├── DDecor-Production
+        ├── Lannister-Production
         │   ├── AWS Production
         │   ├── MongoDB Production
         │   ├── Kubernetes Production
@@ -2405,19 +2405,19 @@ Vaultwarden
         │   ├── SSH Production
         │   └── Cloudflare Production
         │
-        ├── DDecor-UAT
+        ├── Lannister-UAT
         │   ├── AWS UAT
         │   ├── MongoDB UAT
         │   ├── Kubernetes UAT
         │   └── SSH UAT
         │
-        ├── DDecor-Development
+        ├── Lannister-Development
         │   ├── AWS Development
         │   ├── MongoDB Development
         │   ├── Kubernetes Development
         │   └── Jenkins Development
         │
-        └── DDecor-Shared-Tools
+        └── Lannister-Shared-Tools
             ├── GitHub
             ├── Jenkins
             ├── Nexus
@@ -2459,7 +2459,7 @@ The final deployment is:
 For enterprise usage:
 
 ```text
-DDecor Organization
+Lannister Organization
         |
         +-- Owners
         +-- Admins
