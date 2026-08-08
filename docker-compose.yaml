@@ -1,0 +1,25 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:1.36.0
+    container_name: vaultwarden
+    restart: unless-stopped
+
+    environment:
+      SIGNUPS_ALLOWED: "true"
+      INVITATIONS_ALLOWED: "true"
+      LOG_LEVEL: "info"
+      DOMAIN: "https://vault.lannister.buzz"
+
+      SMTP_HOST: "smtp.office365.com"
+      SMTP_PORT: "587"
+      SMTP_SECURITY: "starttls"
+      SMTP_FROM: "no-reply@addverb.in"
+      SMTP_FROM_NAME: "Vaultwarden"
+      SMTP_USERNAME: "no-reply@addverb.in"
+      SMTP_PASSWORD: "heReGF45#@$%&"
+
+    volumes:
+      - ./vw-data:/data
+
+    ports:
+      - "127.0.0.1:8222:80"
