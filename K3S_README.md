@@ -1,9 +1,4 @@
 # Vaultwarden on K3s — Configuration Guide
-
-This covers the pieces missing from the shared manifest: `DOMAIN`, the Ingress
-rule for path-based routing, generating a proper `ADMIN_TOKEN`, opening the
-admin page, how SMTP is wired up, and adding Microsoft SSO.
-
 ---
 
 ## 1. Why `DOMAIN` is required
@@ -33,9 +28,8 @@ No trailing slash on `DOMAIN` itself.
 > (`vault.my.domain.com`) over a subpath. Vaultwarden's web vault assets and
 > some browser-extension/mobile-app flows are known to be finicky under a
 > subpath (see [vaultwarden#2288](https://github.com/dani-garcia/vaultwarden/issues/2288)).
-> It works, but subdomain routing has fewer edge cases. If your team's
-> ingress convention is path-based for every app, the steps below make it
-> work correctly.
+> It works, but subdomain routing has fewer edge cases.
+> The steps below make it work correctly.
 
 ---
 
@@ -45,7 +39,7 @@ Two things matter for Vaultwarden specifically:
 
 1. **Do not rewrite the path.** Vaultwarden needs to see the real
    `/vaultwarden` prefix in the request (it's aware of its own base path via
-   `DOMAIN`), so skip `rewrite-target` annotations that strip the prefix —
+   `DOMAIN`), so skip `rewrite-target` annotations that strip the prefix
    unlike a typical app, rewriting will break it here.
 2. **Use a trailing slash on the path**, and keep `pathType: Prefix`.
 
@@ -93,40 +87,14 @@ kubectl -n vault rollout restart deployment vaultwarden
 
 ---
 
-## 3. Service type
-
-Change the Service from `NodePort` to `ClusterIP` — Ingress talks to it over
-the cluster network, so exposing a NodePort too just opens an extra,
-unauthenticated path to the pod on every node:
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: vaultwarden
-  namespace: vault
-spec:
-  type: ClusterIP
-  selector:
-    app: vaultwarden
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 80
-```
-
----
-
-## 4. Generating `ADMIN_TOKEN` properly
+## 3. Generating `ADMIN_TOKEN` properly
 
 A plain-text `ADMIN_TOKEN` (like the one in the shared manifest) works but is
 logged by Vaultwarden as insecure on every startup. The recommended approach
-is an Argon2id-hashed token, generated with Vaultwarden's own `hash`
-subcommand:
+is an hashed token, generated with subcommand:
 
 ```bash
-docker run --rm -it vaultwarden/server:1.36.0 /vaultwarden hash
+openssl rand -base64 48
 ```
 
 It'll prompt you for a password twice and print something like:
@@ -135,8 +103,6 @@ It'll prompt you for a password twice and print something like:
 ADMIN_TOKEN='$argon2id$v=19$m=65540,t=3,p=4$<salt>$<hash>'
 ```
 
-Take just the `$argon2id$...` string (drop the surrounding single quotes) and
-put it directly in the Kubernetes Secret's `stringData` — no escaping needed,
 since `stringData` isn't shell-interpolated the way a `.env` file is:
 
 ```yaml
@@ -165,10 +131,6 @@ Once `DOMAIN` and the Ingress are set up:
 ```
 https://my.domain.com/vaultwarden/admin
 ```
-
-Log in with the plaintext password you used to generate the Argon2 hash. From
-there you can manage users, invitations, diagnostics, and see whether SMTP
-and the config are being read correctly.
 
 ---
 
@@ -251,12 +213,3 @@ handles vault encryption (that's by design, not a bug).
 Full provider-specific notes: [Vaultwarden SSO wiki – Microsoft Entra ID](https://github.com/dani-garcia/vaultwarden/wiki/Enabling-SSO-support-using-OpenId-Connect#microsoft-entra-id)
 
 ---
-
-## Summary of manifest changes
-
-- [ ] Add `DOMAIN=https://my.domain.com/vaultwarden` to the Deployment env
-- [ ] Change Service `type: NodePort` → `type: ClusterIP`, remove `nodePort`
-- [ ] Add an Ingress resource for `/vaultwarden/` with **no path rewrite**
-- [ ] Replace plaintext `ADMIN_TOKEN` with an Argon2id hash
-- [ ] Rotate the `ADMIN_TOKEN` and `SMTP_PASSWORD` values that were shared in plaintext
-- [ ] (Optional) Add `SSO_*` env vars for Microsoft Entra ID login
